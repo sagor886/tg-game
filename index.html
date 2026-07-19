@@ -8,24 +8,75 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
+    <!-- ব্যাকগ্রাউন্ড অ্যানিমেশন ইফেক্ট -->
+    <div class="animated-bg">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
     <div class="game-container">
-        <div class="level-container">
-            <span id="level-text">🏆 Level: 1</span>
+        
+        <!-- === ১. গেম খেলার মূল মেনু === -->
+        <div id="game-tab" class="tab-content active">
+            <div class="level-container">
+                <span id="level-text">🏆 Level: 1</span>
+            </div>
+            
+            <!-- ডেইলি ট্যাপ লিমিট ডিসপ্লে -->
+            <div class="limit-container">
+                ⚡ Energy: <span id="energy-text">500 / 500</span>
+                <div class="progress-bar"><div id="energy-bar" style="width: 100%;"></div></div>
+            </div>
+
+            <div class="score-container">
+                <img src="https://img.icons8.com/emoji/96/coin-emoji.png" alt="Coin" class="coin-icon">
+                <h1 id="score">0</h1>
+            </div>
+            
+            <div class="click-area" id="click-btn">
+                <img src="https://img.icons8.com/emoji/170/coin-emoji.png" alt="Main Coin" class="main-coin">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn boost-btn" id="boost-btn">⚡ Upgrade Level (Cost: 50)</button>
+                <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 500</button>
+            </div>
         </div>
 
-        <div class="score-container">
-            <img src="https://img.icons8.com/emoji/96/coin-emoji.png" alt="Coin" class="coin-icon">
-            <h1 id="score">0</h1>
+        <!-- === ২. টাস্ক মেনু === -->
+        <div id="tasks-tab" class="tab-content">
+            <h2>📋 Tasks & Rewards</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Complete tasks to earn huge bonuses!</p>
+            <div class="task-list">
+                <div class="task-item">
+                    <span>📢 Join Telegram Channel</span>
+                    <button class="task-claim-btn" onclick="window.open('https://t.me/your_channel', '_blank')">+1000</button>
+                </div>
+                <div class="task-item">
+                    <span>🐦 Follow on Twitter</span>
+                    <button class="task-claim-btn" onclick="window.open('https://twitter.com', '_blank')">+500</button>
+                </div>
+            </div>
         </div>
 
-        <div class="click-area" id="click-btn">
-            <img src="https://img.icons8.com/emoji/170/coin-emoji.png" alt="Main Coin" class="main-coin" id="coin-img">
+        <!-- === ৩. ওয়ালেট/উইথড্র মেনু === -->
+        <div id="wallet-tab" class="tab-content">
+            <h2>💼 My Wallet</h2>
+            <div class="wallet-card">
+                <p>Total Balance</p>
+                <h2 id="wallet-balance" style="color: #ffd700;">0 Coins</h2>
+            </div>
+            <button class="btn invite-btn" id="invite-btn" style="margin-top: 20px;">👥 Invite Friends</button>
+            <button class="btn" style="background: #e91e63; margin-top: 10px;" onclick="alert('Withdrawals will open soon!')">🏦 Withdraw</button>
         </div>
 
-        <div class="action-buttons">
-            <button class="btn boost-btn" id="boost-btn">⚡ Upgrade Level (Cost: 50)</button>
-            <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 500</button>
-            <button class="btn invite-btn" id="invite-btn">👥 Invite Friends</button>
+        <!-- === নিচে স্থায়ী মেনু বার (Bottom Navigation) === -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('game-tab')">🎮<br><span>Tap</span></div>
+            <div class="nav-item" onclick="switchTab('tasks-tab')">📋<br><span>Tasks</span></div>
+            <div class="nav-item" onclick="switchTab('wallet-tab')">💼<br><span>Wallet</span></div>
         </div>
     </div>
 
@@ -34,3 +85,4 @@
 
     <script src="script.js"></script>
 </body>
+</html>
