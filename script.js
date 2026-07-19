@@ -1,47 +1,110 @@
-// Initialize Telegram Web App
+// Telegram Web App Initialization
 const tg = window.Telegram.WebApp;
-tg.expand(); // পুরো স্ক্রিন জুড়ে অ্যাপটি ওপেন হবে
+tg.expand();
 
-let coinCount = 0;
-const balanceEl = document.getElementById('balance');
-const coinBtn = document.getElementById('tap-coin');
-const watchAdBtn = document.getElementById('watch-ad-btn');
-const withdrawBtn = document.getElementById('withdraw-btn');
+let score = parseInt(localStorage.getItem('coins')) || 0;
+let level = parseInt(localStorage.getItem('level')) || 1;
+let coinsPerClick = level; // লেভেল ১ হলে ১ কয়েন, লেভেল ২ হলে ২ কয়েন পাবেন
 
-// ১. কয়েন ট্যাপ করার লজিক
-coinBtn.addEventListener('click', () => {
-    coinCount += 1; // প্রতি ক্লিকে ১ কয়েন করে বাড়বে
-    balanceEl.innerText = coinCount;
-    
-    // মোবাইল ফোনে ভাইব্রেশন বা হ্যাপটিক ফিডব্যাক দেবে
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('medium');
-    }
+// DOM Elements
+const scoreEl = document.getElementById('score');
+const levelTextEl = document.getElementById('level-text');
+const clickBtn = document.getElementById('click-btn');
+const boostBtn = document.getElementById('boost-btn');
+const adBtn = document.getElementById('ad-btn');
+const inviteBtn = document.getElementById('invite-btn');
+
+const clickSound = document.getElementById('click-sound');
+const levelSound = document.getElementById('level-sound');
+
+// Initial Setup Load
+scoreEl.innerText = score;
+levelTextEl.innerText = `🏆 Level: ${level}`;
+updateBoostButtonText();
+
+// 1. Tapping System with Sound & Animation
+clickBtn.addEventListener('click', (e) => {
+    score += coinsPerClick;
+    scoreEl.innerText = score;
+    localStorage.setItem('coins', score);
+
+    // প্লে সাউন্ড
+    clickSound.currentTime = 0;
+    clickSound.play().catch(()=>{});
+
+    // ফ্লোটিং টেক্সট অ্যানিমেশন তৈরি
+    createFloatingText(e, `+${coinsPerClick}`);
 });
 
-// ২. অ্যাড দেখে ইনকাম করার লজিক (Adsterra/Monetag Direct Link)
-watchAdBtn.addEventListener('click', () => {
-    // নিচে "YOUR_AD_LINK_HERE" লেখা জায়গায় আপনার অ্যাড নেটওয়ার্কের লিংকটি বসিয়ে দিন
-    const adLink = "https://wwpb.giriuvan.com/redirect-zone/bd5253f7"; 
+function createFloatingText(e, text) {
+    const floatText = document.createElement('div');
+    floatText.className = 'float-text';
+    floatText.innerText = text;
     
-    // ইউজারের ফোনে নিউ ট্যাবে অ্যাড ওপেন হবে
-    window.open(adLink, '_blank');
+    // ক্লিকের পজিশন অনুযায়ী টেক্সট বসানো
+    const rect = clickBtn.getBoundingClientRect();
+    const x = e.clientX - rect.left - 10;
+    const y = e.clientY - rect.top - 20;
     
-    // অ্যাড লিংকে ক্লিক করার কারণে ইউজারকে ৫০ কয়েন বোনাস দেওয়া হলো
+    floatText.style.left = `${x}px`;
+    floatText.style.top = `${y}px`;
+    
+    clickBtn.appendChild(floatText);
+    
+    // অ্যানিমেশন শেষে রিমুভ করা
     setTimeout(() => {
-        coinCount += 50;
-        balanceEl.innerText = coinCount;
-        alert("Congratulations! You earned 50 bonus coins for watching the ad.");
-    }, 2000);
+        floatText.remove();
+    }, 600);
+}
+
+// 2. Level Upgrade System (Boost)
+boostBtn.addEventListener('click', () => {
+    let upgradeCost = level * 50; // লেভেল যত বাড়বে খরচ তত বাড়বে
+    
+    if (score >= upgradeCost) {
+        score -= upgradeCost;
+        level++;
+        coinsPerClick = level;
+        
+        scoreEl.innerText = score;
+        levelTextEl.innerText = `🏆 Level: ${level}`;
+        
+        localStorage.setItem('coins', score);
+        localStorage.setItem('level', level);
+        
+        updateBoostButtonText();
+        
+        // লেভেল আপ সাউন্ড
+        levelSound.currentTime = 0;
+        levelSound.play().catch(()=>{});
+        
+        alert(`🎉 Awesome! Upgraded to Level ${level}. Now you get ${coinsPerClick} coins per tap!`);
+    } else {
+        alert(`❌ Not enough coins! You need ${upgradeCost} coins.`);
+    }
 });
 
-// ৩. উইথড্র বাটন
-withdrawBtn.addEventListener('click', () => {
-    if(coinCount < 1000) {
-        alert("Minimum withdraw limit is 1000 coins!");
-    } else {
-        alert("Please send a message to the bot with your balance to withdraw.");
-        // বটের কাছে ডাটা ব্যাক পাঠানোর জন্য
-        tg.sendData(JSON.stringify({action: "withdraw", amount: coinCount}));
-    }
+function updateBoostButtonText() {
+    boostBtn.innerText = `⚡ Upgrade Level (Cost: ${level * 50})`;
+}
+
+// 3. Watch Ads Button
+adBtn.addEventListener('click', () => {
+    // এখানে আপনার Monetag/Direct Link-এর অ্যাড বসিয়ে দিন
+    tg.openLink('https://www.example.com/your-ad-link'); 
+    
+    // বোনাস অ্যাড করা
+    score += 500;
+    scoreEl.innerText = score;
+    localStorage.setItem('coins', score);
+});
+
+// 4. Invite Friends Button
+inviteBtn.addEventListener('click', () => {
+    const botUsername = "cr7game_bot"; 
+    const referralLink = `https://t.me/${botUsername}?start=ref_${tg.initDataUnsafe.user?.id || 'player'}`;
+    const shareText = "🎮 Play & Earn Free Coins! 💰";
+    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
+    
+    tg.openTelegramLink(telegramShareUrl);
 });
