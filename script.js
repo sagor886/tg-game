@@ -22,7 +22,7 @@ coinBtn.addEventListener('click', () => {
 // ২. অ্যাড দেখে ইনকাম করার লজিক (Adsterra/Monetag Direct Link)
 watchAdBtn.addEventListener('click', () => {
     // নিচে "YOUR_AD_LINK_HERE" লেখা জায়গায় আপনার অ্যাড নেটওয়ার্কের লিংকটি বসিয়ে দিন
-    const adLink = "https://www.example.com/your-direct-ad-link"; 
+    const adLink = "https://wwpb.giriuvan.com/redirect-zone/bd5253f7"; 
     
     // ইউজারের ফোনে নিউ ট্যাবে অ্যাড ওপেন হবে
     window.open(adLink, '_blank');
