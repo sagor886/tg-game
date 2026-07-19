@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Clicker Game</title>
+    <title>Crypto Clicker & Spin Game</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <!-- ব্যাকগ্রাউন্ড অ্যানিমেশন ইফেক্ট -->
+    <!-- 🌌 ব্যাকগ্রাউন্ড অ্যানিমেশন ইফেক্ট -->
     <div class="animated-bg">
         <div class="bubble"></div>
         <div class="bubble"></div>
         <div class="bubble"></div>
         <div class="bubble"></div>
     </div>
+
+    <!-- 🎵 ব্যাকগ্রাউন্ড রিল্যাক্স মিউজিক (অটো-লুপ) -->
+    <audio id="bg-music" src="https://assets.mixkit.co/active_storage/sfx/123/123-100.wav" loop></audio>
 
     <div class="game-container">
         
@@ -24,15 +27,20 @@
                 <span id="level-text">🏆 Level: 1</span>
             </div>
             
-            <!-- ডেইলি ট্যাপ লিমিট ডিসপ্লে (২০০ বার) -->
+            <!-- ⚡ ডেইলি ট্যাপ লিমিট ডিসপ্লে (২০০ বার) -->
             <div class="limit-container">
                 ⚡ Tap Energy: <span id="energy-text">200 / 200</span>
                 <div class="progress-bar"><div id="energy-bar" style="width: 100%;"></div></div>
             </div>
 
+            <!-- 🎁 প্রতি ঘণ্টায় ১০ এনার্জি গিফট ক্লেম বাটন -->
+            <div class="gift-section">
+                <button id="gift-btn" class="gift-btn-style">🎁 Claim Hourly Gift (+10 ⚡)</button>
+            </div>
+
             <div class="score-container">
                 <img src="https://img.icons8.com/emoji/96/coin-emoji.png" alt="Coin" class="coin-icon">
-                <h1 id="score">0</h1>
+                <h1 id="score">0.0</h1>
             </div>
             
             <div class="click-area" id="click-btn">
@@ -41,7 +49,9 @@
             
             <div class="action-buttons">
                 <button class="btn boost-btn" id="boost-btn">⚡ Upgrade Level (Cost: 50)</button>
-                <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 500</button>
+                <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 50 ⚡</button>
+                <!-- 🎡 স্পিন গেম খোলার বাটন -->
+                <button class="btn spin-open-btn" id="spin-open-btn">🎡 Play Lucky Spin (99 💰)</button>
             </div>
         </div>
 
@@ -52,11 +62,7 @@
             <div class="task-list">
                 <div class="task-item">
                     <span>📢 Join Telegram Channel</span>
-                    <button class="task-claim-btn" onclick="window.open('https://t.me/+n872jwxmUIQxOGM1')">+1000</button>
-                </div>
-                <div class="task-item">
-                    <span>🐦 Follow on Twitter</span>
-                    <button class="task-claim-btn" onclick="window.open('https://twitter.com', '_blank')">+500</button>
+                    <button class="task-claim-btn" onclick="window.open('https://t.me/+n872jwxmUIQxOGM1', '_blank')">🎁 +1000</button>
                 </div>
             </div>
         </div>
@@ -95,21 +101,13 @@
                     <div class="input-group">
                         <label>AMOUNT IN TAKA (৳)</label>
                         <input type="number" id="withdraw-amount" placeholder="0.00" min="50">
-                        <small>কয়েন কেটে টাকা পাঠানো হবে। সর্বনিম্ন উইথড্র ৫০ টাকা।</small>
                     </div>
 
                     <div class="input-group">
                         <label>ACCOUNT NUMBER (<span id="selected-method-label">Nagad</span>)</label>
                         <input type="text" id="account-number" placeholder="01XXXXXXXXX">
-                        <small>Enter your personal account number.</small>
                     </div>
 
-                    <div class="input-group">
-                        <label>ACCOUNT NAME (OPTIONAL)</label>
-                        <input type="text" id="account-name" placeholder="Your name">
-                    </div>
-
-                    <!-- লাইভ ক্যালকুলেশন বার -->
                     <div class="calculation-bar">
                         <div class="calc-row">
                             <span>উইথড্র চার্জ: <strong id="charge-text" style="color: #e91e63;">৳০.০০</strong></span>
@@ -121,10 +119,14 @@
                 </div>
             </div>
 
-            <button class="btn invite-btn" id="invite-btn" style="margin-top: 20px; margin-bottom: 30px;">👥 Invite Friends</button>
+            <!-- 👥 ইউনিক ইনভাইট ফ্রেন্ড সেকশন -->
+            <div class="invite-box" style="margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; border: 1px dashed rgba(255,255,255,0.2);">
+                <p style="font-size: 12px; color: #ffcc00; margin-bottom: 10px;">👥 প্রতি রেফারে পাবেন <b>১০০০ পয়েন্ট</b>! (শর্ত: বন্ধুকে ন্যূনতম ৩০০০ পয়েন্ট কালেক্ট করতে হবে, তাহলে উভয়ই বোনাস পাবেন।)</p>
+                <button class="btn invite-btn" id="invite-btn">🔗 Invite Friends</button>
+            </div>
         </div>
 
-        <!-- === নিচে স্থায়ী মেনু বার (Bottom Navigation) === -->
+        <!-- === নিচে স্থায়ী মেনু বার === -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('game-tab')">🎮<br><span>Tap</span></div>
             <div class="nav-item" onclick="switchTab('tasks-tab')">📋<br><span>Tasks</span></div>
@@ -132,6 +134,32 @@
         </div>
     </div>
 
+    <!-- 🎡 🏆 স্পিন গেম মডাল পপআপ -->
+    <div id="spin-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2>🎡 Lucky Spin Wheel</h2>
+            <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">Cost: 99 Coins per spin</p>
+            
+            <div class="wheel-container">
+                <div class="wheel-pointer">👇</div>
+                <div id="wheel" class="wheel">
+                    <div class="segment" style="transform: rotate(0deg)">🔟 ⚡</div>
+                    <div class="segment" style="transform: rotate(45deg)">2️⃣0️⃣ 💰</div>
+                    <div class="segment" style="transform: rotate(90deg)">4️⃣0️⃣ ⚡</div>
+                    <div class="segment" style="transform: rotate(135deg)">7️⃣0️⃣ 💰</div>
+                    <div class="segment" style="transform: rotate(180deg)">1️⃣0️⃣0️⃣ ⚡</div>
+                    <div class="segment" style="transform: rotate(225deg)">4️⃣0️⃣ 💰</div>
+                    <div class="segment" style="transform: rotate(270deg)">5️⃣0️⃣0️⃣ ⚡</div>
+                    <div class="segment" style="transform: rotate(315deg)">💥 Try Again</div>
+                </div>
+            </div>
+            
+            <button id="spin-btn" class="btn" style="background: linear-gradient(135deg, #e91e63, #ff007f); margin-top: 25px;">🚀 SPIN NOW</button>
+        </div>
+    </div>
+
+    <!-- অডিও ইফেক্টস -->
     <audio id="click-sound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
     <audio id="level-sound" src="https://actions.google.com/sounds/v1/cartoon/applause.ogg" preload="auto"></audio>
 
