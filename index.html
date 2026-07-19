@@ -24,9 +24,9 @@
                 <span id="level-text">🏆 Level: 1</span>
             </div>
             
-            <!-- ডেইলি ট্যাপ লিমিট ডিসপ্লে -->
+            <!-- ডেইলি ট্যাপ লিমিট ডিসপ্লে (২০০ বার) -->
             <div class="limit-container">
-                ⚡ Energy: <span id="energy-text">500 / 500</span>
+                ⚡ Tap Energy: <span id="energy-text">200 / 200</span>
                 <div class="progress-bar"><div id="energy-bar" style="width: 100%;"></div></div>
             </div>
 
@@ -61,15 +61,67 @@
             </div>
         </div>
 
-        <!-- === ৩. ওয়ালেট/উইথড্র মেনু === -->
+        <!-- === ৩. প্রফেশনাল ওয়ালেট/উইথড্র মেনু === -->
         <div id="wallet-tab" class="tab-content">
-            <h2>💼 My Wallet</h2>
-            <div class="wallet-card">
-                <p>Total Balance</p>
-                <h2 id="wallet-balance" style="color: #ffd700;">0 Coins</h2>
+            <div class="wallet-card-new">
+                <div class="balance-info">
+                    <span class="bal-title">AVAILABLE BALANCE</span>
+                    <h2 class="bal-amount">৳ <span id="wallet-balance-num">0.00</span></h2>
+                    <small style="color: rgba(255,255,255,0.7); font-size: 11px;">(1000 Coins = 1 Tk)</small>
+                </div>
+                <button class="wallet-icon-btn">💼 Wallet</button>
             </div>
-            <button class="btn invite-btn" id="invite-btn" style="margin-top: 20px;">👥 Invite Friends</button>
-            <button class="btn" style="background: #e91e63; margin-top: 10px;" onclick="alert('Withdrawals will open soon!')">🏦 Withdraw</button>
+
+            <!-- পেমেন্ট মেথড সেকশন -->
+            <div class="withdraw-section">
+                <h3 class="section-title">PAYMENT METHOD</h3>
+                <div class="payment-methods">
+                    <div class="method-card active" id="method-nagad" onclick="selectMethod('Nagad')">
+                        <div class="check-circle" id="nagad-check">✓</div>
+                        <span class="method-name">Nagad</span>
+                        <span class="method-badge">Fee 20%</span>
+                        <span class="method-min">Min ৳50.00</span>
+                    </div>
+                    <div class="method-card" id="method-bkash" onclick="selectMethod('bKash')">
+                        <div class="check-circle" id="bkash-check" style="display:none;">✓</div>
+                        <span class="method-name">bKash</span>
+                        <span class="method-badge">Fee 20%</span>
+                        <span class="method-min">Min ৳50.00</span>
+                    </div>
+                </div>
+
+                <!-- উইথড্র ফর্ম -->
+                <div class="withdraw-form">
+                    <div class="input-group">
+                        <label>AMOUNT IN TAKA (৳)</label>
+                        <input type="number" id="withdraw-amount" placeholder="0.00" min="50">
+                        <small>কয়েন কেটে টাকা পাঠানো হবে। সর্বনিম্ন উইথড্র ৫০ টাকা।</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label>ACCOUNT NUMBER (<span id="selected-method-label">Nagad</span>)</label>
+                        <input type="text" id="account-number" placeholder="01XXXXXXXXX">
+                        <small>Enter your personal account number.</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label>ACCOUNT NAME (OPTIONAL)</label>
+                        <input type="text" id="account-name" placeholder="Your name">
+                    </div>
+
+                    <!-- লাইভ ক্যালকুলেশন বার -->
+                    <div class="calculation-bar">
+                        <div class="calc-row">
+                            <span>উইথড্র চার্জ: <strong id="charge-text" style="color: #e91e63;">৳০.০০</strong></span>
+                            <span>আপনি পাবেন: <strong id="receive-text" style="color: #00b09b;">৳০.০০</strong></span>
+                        </div>
+                    </div>
+
+                    <button class="confirm-withdraw-btn" id="confirm-withdraw-btn">Confirm Withdrawal</button>
+                </div>
+            </div>
+
+            <button class="btn invite-btn" id="invite-btn" style="margin-top: 20px; margin-bottom: 30px;">👥 Invite Friends</button>
         </div>
 
         <!-- === নিচে স্থায়ী মেনু বার (Bottom Navigation) === -->
