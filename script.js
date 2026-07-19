@@ -183,7 +183,7 @@ boostBtn.addEventListener('click', () => {
 
 // বিজ্ঞাপন দেখে আনলিমিটেড কয়েন ইনকাম (ট্যাপ লিমিটের বাইরে)
 adBtn.addEventListener('click', () => {
-    tg.openLink('https://www.example.com/your-ad-link'); 
+    tg.openLink('https://saking886.blogspot.com/p/news.html'); 
     score += 500;
     localStorage.setItem('coins', score);
     updateUI();
