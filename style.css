@@ -1,123 +1,36 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    user-select: none;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Clicker Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="game-container">
+        <div class="level-container">
+            <span id="level-text">🏆 Level: 1</span>
+        </div>
 
-body {
-    background: radial-gradient(circle, #1a1a2e 0%, #0f0f1b 100%);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-}
+        <div class="score-container">
+            <img src="https://img.icons8.com/emoji/96/coin-emoji.png" alt="Coin" class="coin-icon">
+            <h1 id="score">0</h1>
+        </div>
 
-.game-container {
-    text-align: center;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    position: relative;
-}
+        <div class="click-area" id="click-btn">
+            <img src="https://img.icons8.com/emoji/170/coin-emoji.png" alt="Main Coin" class="main-coin" id="coin-img">
+        </div>
 
-.level-container {
-    font-size: 18px;
-    font-weight: bold;
-    color: #ffd700;
-    margin-bottom: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px 15px;
-    border-radius: 20px;
-    display: inline-block;
-}
+        <div class="action-buttons">
+            <button class="btn boost-btn" id="boost-btn">⚡ Upgrade Level (Cost: 50)</button>
+            <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 500</button>
+            <button class="btn invite-btn" id="invite-btn">👥 Invite Friends</button>
+        </div>
+    </div>
 
-.score-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 30px;
-}
+    <audio id="click-sound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
+    <audio id="level-sound" src="https://actions.google.com/sounds/v1/cartoon/applause.ogg" preload="auto"></audio>
 
-.coin-icon {
-    width: 40px;
-    height: 40px;
-}
-
-#score {
-    font-size: 45px;
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
-}
-
-.click-area {
-    position: relative;
-    display: inline-block;
-    margin: 20px 0;
-    cursor: pointer;
-}
-
-.main-coin {
-    transition: transform 0.05s ease;
-    filter: drop-shadow(0 10px 20px rgba(255, 215, 0, 0.3));
-}
-
-/* ট্যাপ করলে কয়েন ছোট হবে */
-.main-coin:active {
-    transform: scale(0.92);
-}
-
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.btn {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-.boost-btn { background: linear-gradient(135deg, #ff9900, #ff5500); }
-.ad-btn { background: linear-gradient(135deg, #00b09b, #96c93d); }
-.invite-btn { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-
-/* +1 Floating Text Animation */
-.float-text {
-    position: absolute;
-    font-size: 28px;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    pointer-events: none;
-    animation: floatUp 0.6s ease-out forwards;
-}
-
-@keyframes floatUp {
-    0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-120px) scale(0.8);
-    }
-}
+    <script src="script.js"></script>
+</body>
