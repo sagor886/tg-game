@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Coin Mini App</title>
+    <title>Crypto Clicker Game</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="game-container">
-        <h1 id="title">Tap & Earn</h1>
-        
-        <div class="balance-container">
-            <span id="coin-icon">💰</span>
-            <span id="balance">0</span>
+        <div class="level-container">
+            <span id="level-text">🏆 Level: 1</span>
         </div>
 
-        <div class="coin-btn" id="tap-coin">
-            🪙
+        <div class="score-container">
+            <img src="https://img.icons8.com/emoji/96/coin-emoji.png" alt="Coin" class="coin-icon">
+            <h1 id="score">0</h1>
+        </div>
+
+        <div class="click-area" id="click-btn">
+            <img src="https://img.icons8.com/emoji/170/coin-emoji.png" alt="Main Coin" class="main-coin" id="coin-img">
         </div>
 
         <div class="action-buttons">
-          <button class="btn invite-btn" id="invite-btn">👥 Invite Friends & Earn</button>
-            <button class="btn ad-btn" id="watch-ad-btn">📺 Watch Ad & Earn (+50)</button>
-            <button class="btn withdraw-btn" id="withdraw-btn">🏦 Withdraw</button>
+            <button class="btn boost-btn" id="boost-btn">⚡ Upgrade Level (Cost: 50)</button>
+            <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 500</button>
+            <button class="btn invite-btn" id="invite-btn">👥 Invite Friends</button>
         </div>
     </div>
 
+    <audio id="click-sound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
+    <audio id="level-sound" src="https://actions.google.com/sounds/v1/cartoon/applause.ogg" preload="auto"></audio>
+
     <script src="script.js"></script>
 </body>
-</html>
