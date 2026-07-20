@@ -3,166 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Clicker & Spin Game</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Game Control Admin Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0e14; color: white; padding: 20px; }
+        h1 { color: #00b09b; text-align: center; margin-bottom: 30px; }
+        h2 { color: #ffd700; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #161b22; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #2d333b; padding: 12px; text-align: left; }
+        th { background: #21262d; color: #58a6ff; }
+        input { padding: 6px; background: #0d1117; color: #fff; border: 1px solid #30363d; border-radius: 4px; width: 100px; }
+        button { padding: 6px 12px; background: #238636; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; }
+        button:hover { opacity: 0.9; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .pending { background: #d29922; color: black; }
+        .paid { background: #238636; color: white; }
+    </style>
 </head>
 <body>
-    <!-- 🌌 ব্যাকগ্রাউন্ড অ্যানিমেশন ইফেক্ট -->
-    <div class="animated-bg">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-    </div>
 
-    <!-- 🎵 ব্যাকগ্রাউন্ড রিল্যাক্স মিউজিক (অটো-লুপ) -->
-    <audio id="bg-music" src="https://assets.mixkit.co/active_storage/sfx/123/123-100.wav" loop></audio>
+    <h1>👨‍⚖️ Live Game Admin Panel</h1>
+    
+    <h2>📊 Registered Users List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Score (Coins)</th>
+                <th>Level</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="users-list"><tr><td colspan="5">Loading users...</td></tr></tbody>
+    </table>
 
-    <div class="game-container">
-        
-        <!-- === ১. গেম খেলার মূল মেনু === -->
-        <div id="game-tab" class="tab-content active">
-            <div class="level-container">
-                <span id="level-text">🏆 Level: 1</span>
-            </div>
-            
-            <!-- ⚡ ডেইলি ট্যাপ লিমিট ডিসপ্লে (২০০ বার) -->
-            <div class="limit-container">
-                ⚡ Tap Energy: <span id="energy-text">200 / 200</span>
-                <div class="progress-bar"><div id="energy-bar" style="width: 100%;"></div></div>
-            </div>
+    <h2>💸 Withdraw Requests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Method</th>
+                <th>Number</th>
+                <th>Amount (৳)</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="withdraw-list"><tr><td colspan="6">Loading withdraw requests...</td></tr></tbody>
+    </table>
 
-            <!-- 🎁 প্রতি ঘণ্টায় ১০ এনার্জি গিফট ক্লেম বাটন -->
-            <div class="gift-section">
-                <button id="gift-btn" class="gift-btn-style">🎁 Claim Hourly Gift (+10 ⚡)</button>
-            </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-            <div class="score-container">
-                <img src="https://img.icons8.com/emoji/96/coin-emoji.png" alt="Coin" class="coin-icon">
-                <h1 id="score">0.0</h1>
-            </div>
-            
-            <div class="click-area" id="click-btn">
-                <img src="https://img.icons8.com/emoji/170/coin-emoji.png" alt="Main Coin" class="main-coin">
-            </div>
-            
-            <div class="action-buttons">
-                <button class="btn boost-btn" id="boost-btn">⚡ Upgrade Level (Cost: 50)</button>
-                <button class="btn ad-btn" id="ad-btn">📺 Watch Ad & Earn 50 ⚡</button>
-                <!-- 🎡 স্পিন গেম খোলার বাটন -->
-                <button class="btn spin-open-btn" id="spin-open-btn">🎡 Play Lucky Spin (99 💰)</button>
-            </div>
-        </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBRIPJl700j0-v0FJPjQeIapnVQxHjd_oY",
+            authDomain: "tg-game-d7a56.firebaseapp.com",
+            projectId: "tg-game-d7a56",
+            storageBucket: "tg-game-d7a56.firebasestorage.app",
+            messagingSenderId: "1042867845549",
+            appId: "1:1042867845549:web:39bfbb2b32ad8951680924",
+            measurementId: "G-25DN521WZW"
+        };
 
-        <!-- === ২. টাস্ক মেনু === -->
-        <div id="tasks-tab" class="tab-content">
-            <h2>📋 Tasks & Rewards</h2>
-            <p style="color: #aaa; margin-bottom: 20px;">Complete tasks to earn huge bonuses!</p>
-            <div class="task-list">
-                <div class="task-item">
-                    <span>📢 Join Telegram Channel</span>
-                    <button class="task-claim-btn" onclick="window.open('https://t.me/+n872jwxmUIQxOGM1', '_blank')">🎁 +1000</button>
-                </div>
-            </div>
-        </div>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        <!-- === ৩. প্রফেশনাল ওয়ালেট/উইথড্র মেনু === -->
-        <div id="wallet-tab" class="tab-content">
-            <div class="wallet-card-new">
-                <div class="balance-info">
-                    <span class="bal-title">AVAILABLE BALANCE</span>
-                    <h2 class="bal-amount">৳ <span id="wallet-balance-num">0.00</span></h2>
-                    <small style="color: rgba(255,255,255,0.7); font-size: 11px;">(1000 Coins = 1 Tk)</small>
-                </div>
-                <button class="wallet-icon-btn">💼 Wallet</button>
-            </div>
+        // Load All Users
+        async function loadUsers() {
+            const querySnapshot = await getDocs(collection(db, "users"));
+            const list = document.getElementById('users-list');
+            list.innerHTML = "";
+            querySnapshot.forEach((docSnap) => {
+                const u = docSnap.data();
+                list.innerHTML += `
+                    <tr>
+                        <td>${docSnap.id}</td>
+                        <td>${u.name || 'User'}</td>
+                        <td><input type="number" id="score-${docSnap.id}" value="${parseFloat(u.score || 0).toFixed(1)}"></td>
+                        <td>${u.level || 1}</td>
+                        <td><button onclick="updateUserScore('${docSnap.id}')">💾 Save Score</button></td>
+                    </tr>
+                `;
+            });
+        }
 
-            <!-- পেমেন্ট মেথড সেকশন -->
-            <div class="withdraw-section">
-                <h3 class="section-title">PAYMENT METHOD</h3>
-                <div class="payment-methods">
-                    <div class="method-card active" id="method-nagad" onclick="selectMethod('Nagad')">
-                        <div class="check-circle" id="nagad-check">✓</div>
-                        <span class="method-name">Nagad</span>
-                        <span class="method-badge">Fee 20%</span>
-                        <span class="method-min">Min ৳50.00</span>
-                    </div>
-                    <div class="method-card" id="method-bkash" onclick="selectMethod('bKash')">
-                        <div class="check-circle" id="bkash-check" style="display:none;">✓</div>
-                        <span class="method-name">bKash</span>
-                        <span class="method-badge">Fee 20%</span>
-                        <span class="method-min">Min ৳50.00</span>
-                    </div>
-                </div>
+        // Save User Score
+        window.updateUserScore = async (id) => {
+            let newScore = parseFloat(document.getElementById(`score-${id}`).value);
+            await updateDoc(doc(db, "users", id), { score: newScore });
+            alert("✅ ইউজারের ব্যালেন্স সফলভাবে আপডেট করা হয়েছে!");
+        };
 
-                <!-- উইথড্র ফর্ম -->
-                <div class="withdraw-form">
-                    <div class="input-group">
-                        <label>AMOUNT IN TAKA (৳)</label>
-                        <input type="number" id="withdraw-amount" placeholder="0.00" min="50">
-                    </div>
+        // Load Withdrawals
+        async function loadWithdrawals() {
+            const querySnapshot = await getDocs(collection(db, "withdrawals"));
+            const list = document.getElementById('withdraw-list');
+            list.innerHTML = "";
+            querySnapshot.forEach((docSnap) => {
+                const w = docSnap.data();
+                const statusClass = w.status === 'Paid ✅' ? 'paid' : 'pending';
+                list.innerHTML += `
+                    <tr>
+                        <td>${w.userName || 'User'}</td>
+                        <td><b>${w.method}</b></td>
+                        <td>${w.accountNo}</td>
+                        <td>৳${w.amountTk}</td>
+                        <td><span class="badge ${statusClass}">${w.status}</span></td>
+                        <td>
+                            ${w.status !== 'Paid ✅' ? `<button onclick="approveWithdraw('${docSnap.id}')">✅ Approve Payment</button>` : 'Completed'}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
 
-                    <div class="input-group">
-                        <label>ACCOUNT NUMBER (<span id="selected-method-label">Nagad</span>)</label>
-                        <input type="text" id="account-number" placeholder="01XXXXXXXXX">
-                    </div>
+        window.approveWithdraw = async (id) => {
+            await updateDoc(doc(db, "withdrawals", id), { status: "Paid ✅" });
+            alert("✅ উইথড্র Approved দেওয়া হয়েছে!");
+            loadWithdrawals();
+        };
 
-                    <div class="calculation-bar">
-                        <div class="calc-row">
-                            <span>উইথড্র চার্জ: <strong id="charge-text" style="color: #e91e63;">৳০.০০</strong></span>
-                            <span>আপনি পাবেন: <strong id="receive-text" style="color: #00b09b;">৳০.০০</strong></span>
-                        </div>
-                    </div>
-
-                    <button class="confirm-withdraw-btn" id="confirm-withdraw-btn">Confirm Withdrawal</button>
-                </div>
-            </div>
-
-            <!-- 👥 ইউনিক ইনভাইট ফ্রেন্ড সেকশন -->
-            <div class="invite-box" style="margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; border: 1px dashed rgba(255,255,255,0.2);">
-                <p style="font-size: 12px; color: #ffcc00; margin-bottom: 10px;">👥 প্রতি রেফারে পাবেন <b>১০০০ পয়েন্ট</b>! (শর্ত: বন্ধুকে ন্যূনতম ৩০০০ পয়েন্ট কালেক্ট করতে হবে, তাহলে উভয়ই বোনাস পাবেন।)</p>
-                <button class="btn invite-btn" id="invite-btn">🔗 Invite Friends</button>
-            </div>
-        </div>
-
-        <!-- === নিচে স্থায়ী মেনু বার === -->
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('game-tab')">🎮<br><span>Tap</span></div>
-            <div class="nav-item" onclick="switchTab('tasks-tab')">📋<br><span>Tasks</span></div>
-            <div class="nav-item" onclick="switchTab('wallet-tab')">💼<br><span>Wallet</span></div>
-        </div>
-    </div>
-
-    <!-- 🎡 🏆 স্পিন গেম মডাল পপআপ -->
-    <div id="spin-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <h2>🎡 Lucky Spin Wheel</h2>
-            <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">Cost: 99 Coins per spin</p>
-            
-            <div class="wheel-container">
-                <div class="wheel-pointer">👇</div>
-                <div id="wheel" class="wheel">
-                    <div class="segment" style="transform: rotate(0deg)">🔟 ⚡</div>
-                    <div class="segment" style="transform: rotate(45deg)">2️⃣0️⃣ 💰</div>
-                    <div class="segment" style="transform: rotate(90deg)">4️⃣0️⃣ ⚡</div>
-                    <div class="segment" style="transform: rotate(135deg)">7️⃣0️⃣ 💰</div>
-                    <div class="segment" style="transform: rotate(180deg)">1️⃣0️⃣0️⃣ ⚡</div>
-                    <div class="segment" style="transform: rotate(225deg)">4️⃣0️⃣ 💰</div>
-                    <div class="segment" style="transform: rotate(270deg)">5️⃣0️⃣0️⃣ ⚡</div>
-                    <div class="segment" style="transform: rotate(315deg)">💥 Try Again</div>
-                </div>
-            </div>
-            
-            <button id="spin-btn" class="btn" style="background: linear-gradient(135deg, #e91e63, #ff007f); margin-top: 25px;">🚀 SPIN NOW</button>
-        </div>
-    </div>
-
-    <!-- অডিও ইফেক্টস -->
-    <audio id="click-sound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
-    <audio id="level-sound" src="https://actions.google.com/sounds/v1/cartoon/applause.ogg" preload="auto"></audio>
-
-    <script src="script.js"></script>
+        loadUsers();
+        loadWithdrawals();
+    </script>
 </body>
 </html>
