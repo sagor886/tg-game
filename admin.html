@@ -1,60 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Admin Panel</title>
+    <title>⚙️ Super Game Master Control Panel</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0e14; color: white; padding: 20px; }
-        h1 { color: #00b09b; text-align: center; margin-bottom: 30px; }
-        h2 { color: #ffd700; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 30px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #161b22; border-radius: 8px; overflow: hidden; }
-        th, td { border: 1px solid #2d333b; padding: 12px; text-align: left; }
-        th { background: #21262d; color: #58a6ff; }
-        input { padding: 6px; background: #0d1117; color: #fff; border: 1px solid #30363d; border-radius: 4px; width: 100px; }
-        button { padding: 6px 12px; background: #238636; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #0b0f19; color: #f1f5f9; padding: 20px; margin: 0; }
+        h1 { color: #38bdf8; text-align: center; margin-bottom: 20px; }
+        h2 { color: #f59e0b; border-bottom: 2px solid #1e293b; padding-bottom: 8px; margin-top: 0; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 14px; color: #94a3b8; font-weight: bold; }
+        input { padding: 10px; background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 6px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #0f172a; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #1e293b; padding: 10px; text-align: left; font-size: 13px; }
+        th { background: #334155; color: #38bdf8; }
+        button { padding: 8px 14px; background: #2563eb; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; margin: 2px; }
         button:hover { opacity: 0.9; }
+        .btn-success { background: #10b981; }
+        .btn-danger { background: #ef4444; }
         .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
-        .pending { background: #d29922; color: black; }
-        .paid { background: #238636; color: white; }
+        .pending { background: #f59e0b; color: black; }
+        .paid { background: #10b981; color: white; }
+        .rejected { background: #ef4444; color: white; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } table { display: block; overflow-x: auto; } }
     </style>
 </head>
 <body>
 
-    <h1>👨‍⚖️ Live Game Admin Panel</h1>
-    
-    <h2>📊 Registered Users List</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Score (Coins)</th>
-                <th>Level</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="users-list"><tr><td colspan="5">Loading users...</td></tr></tbody>
-    </table>
+    <h1>⚙️ Game Master Control Panel</h1>
 
-    <h2>💸 Withdraw Requests</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>User Name</th>
-                <th>Method</th>
-                <th>Number</th>
-                <th>Amount (৳)</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="withdraw-list"><tr><td colspan="6">Loading withdraw requests...</td></tr></tbody>
-    </table>
+    <!-- 🎯 1. GLOBAL GAME SETTINGS CONTROL -->
+    <div class="card">
+        <h2>🌐 Game & Ad Settings Control</h2>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>📺 Main Ad Link (Watch Ad Button):</label>
+                <input type="text" id="setting-ad-link" placeholder="https://saking886.blogspot.com/...">
+            </div>
+            <div class="form-group">
+                <label>🎡 Spin Cost (Coins):</label>
+                <input type="number" id="setting-spin-cost" placeholder="99">
+            </div>
+        </div>
+        <button class="btn-success" onclick="saveGlobalSettings()" style="width: 100%; margin-top: 10px; padding: 12px;">💾 Save Game Settings</button>
+    </div>
+
+    <!-- ➕ 2. ADD NEW FEATURE / TASK CONTROL -->
+    <div class="card">
+        <h2>📢 Add New Task / Feature Link</h2>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Task Name / Title:</label>
+                <input type="text" id="task-title" placeholder="e.g. Join Telegram Channel">
+            </div>
+            <div class="form-group">
+                <label>Task URL / Link:</label>
+                <input type="text" id="task-url" placeholder="https://t.me/yourchannel">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Reward Coins:</label>
+            <input type="number" id="task-reward" placeholder="100">
+        </div>
+        <button class="btn-success" onclick="addNewTask()" style="width: 100%; margin-top: 5px;">➕ Publish New Task</button>
+    </div>
+
+    <!-- 👥 3. ALL PLAYERS & USER ID SHOW CONTROL -->
+    <div class="card">
+        <h2>👥 Users Management (Telegram ID Show)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Telegram User ID</th>
+                    <th>User Name</th>
+                    <th>Coins</th>
+                    <th>Level</th>
+                    <th>Energy</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="users-list"><tr><td colspan="6">Loading users data...</td></tr></tbody>
+        </table>
+    </div>
+
+    <!-- 💸 4. WITHDRAWAL REQUESTS CONTROL -->
+    <div class="card">
+        <h2>💸 Withdrawal Requests</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Telegram ID</th>
+                    <th>User Name</th>
+                    <th>Method</th>
+                    <th>Number</th>
+                    <th>Amount (৳)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="withdraw-list"><tr><td colspan="7">Loading withdraw requests...</td></tr></tbody>
+        </table>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBRIPJl700j0-v0FJPjQeIapnVQxHjd_oY",
@@ -69,6 +122,52 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Load Settings
+        async function loadSettings() {
+            try {
+                const settingsSnap = await getDoc(doc(db, "settings", "game_config"));
+                if (settingsSnap.exists()) {
+                    const data = settingsSnap.data();
+                    document.getElementById('setting-ad-link').value = data.adLink || "";
+                    document.getElementById('setting-spin-cost').value = data.spinCost || 99;
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        // Save Global Settings
+        window.saveGlobalSettings = async () => {
+            let adLink = document.getElementById('setting-ad-link').value.trim();
+            let spinCost = parseInt(document.getElementById('setting-spin-cost').value);
+
+            await setDoc(doc(db, "settings", "game_config"), {
+                adLink: adLink,
+                spinCost: spinCost
+            }, { merge: true });
+            alert("✅ গেম সেটিংস (Ads & Spin Cost) সফলভাবে সেভ হয়েছে!");
+        };
+
+        // Add New Task
+        window.addNewTask = async () => {
+            let title = document.getElementById('task-title').value.trim();
+            let url = document.getElementById('task-url').value.trim();
+            let reward = parseInt(document.getElementById('task-reward').value);
+
+            if(!title || !url || isNaN(reward)) { alert("❌ সব ঘর সঠিক তথ্য দিয়ে পূরণ করুন!"); return; }
+
+            const taskId = "task_" + Date.now();
+            await setDoc(doc(db, "tasks", taskId), {
+                title: title,
+                url: url,
+                reward: reward,
+                createdAt: new Date()
+            });
+
+            document.getElementById('task-title').value = "";
+            document.getElementById('task-url').value = "";
+            document.getElementById('task-reward').value = "";
+            alert("✅ নতুন টাস্ক যুক্ত করা হয়েছে!");
+        };
+
         // Load All Users
         async function loadUsers() {
             const querySnapshot = await getDocs(collection(db, "users"));
@@ -76,23 +175,44 @@
             list.innerHTML = "";
             querySnapshot.forEach((docSnap) => {
                 const u = docSnap.data();
+                const id = docSnap.id;
                 list.innerHTML += `
                     <tr>
-                        <td>${docSnap.id}</td>
-                        <td>${u.name || 'User'}</td>
-                        <td><input type="number" id="score-${docSnap.id}" value="${parseFloat(u.score || 0).toFixed(1)}"></td>
-                        <td>${u.level || 1}</td>
-                        <td><button onclick="updateUserScore('${docSnap.id}')">💾 Save Score</button></td>
+                        <td><b style="color:#38bdf8;">${id}</b></td>
+                        <td><b>${u.name || 'Player'}</b></td>
+                        <td><input type="number" id="score-${id}" value="${parseFloat(u.score || 0).toFixed(1)}" style="width:100px;"></td>
+                        <td><input type="number" id="level-${id}" value="${u.level || 1}" style="width:60px;"></td>
+                        <td><input type="number" id="energy-${id}" value="${u.energy !== undefined ? u.energy : 200}" style="width:70px;"></td>
+                        <td>
+                            <button class="btn-success" onclick="updatePlayer('${id}')">💾 Save</button>
+                            <button class="btn-danger" onclick="deletePlayer('${id}')">🗑️ Delete</button>
+                        </td>
                     </tr>
                 `;
             });
         }
 
-        // Save User Score
-        window.updateUserScore = async (id) => {
+        // Save Player
+        window.updatePlayer = async (id) => {
             let newScore = parseFloat(document.getElementById(`score-${id}`).value);
-            await updateDoc(doc(db, "users", id), { score: newScore });
-            alert("✅ ইউজারের ব্যালেন্স আপডেট হয়েছে!");
+            let newLevel = parseInt(document.getElementById(`level-${id}`).value);
+            let newEnergy = parseInt(document.getElementById(`energy-${id}`).value);
+
+            await updateDoc(doc(db, "users", id), {
+                score: newScore,
+                level: newLevel,
+                energy: newEnergy
+            });
+            alert("✅ ইউজারের গেম তথ্য আপডেট হয়েছে!");
+        };
+
+        // Delete Player
+        window.deletePlayer = async (id) => {
+            if(confirm("⚠️ এই ইউজারকে ডাটাবেজ থেকে মুছে ফেলতে চান?")) {
+                await deleteDoc(doc(db, "users", id));
+                alert("🗑️ ইউজার মুছে ফেলা হয়েছে!");
+                loadUsers();
+            }
         };
 
         // Load Withdrawals
@@ -102,30 +222,39 @@
             list.innerHTML = "";
             querySnapshot.forEach((docSnap) => {
                 const w = docSnap.data();
-                const statusClass = w.status === 'Paid ✅' ? 'paid' : 'pending';
+                const id = docSnap.id;
+                let statusBadge = `<span class="badge pending">Pending</span>`;
+                if(w.status === 'Paid ✅') statusBadge = `<span class="badge paid">Paid</span>`;
+                if(w.status === 'Rejected ❌') statusBadge = `<span class="badge rejected">Rejected</span>`;
+
                 list.innerHTML += `
                     <tr>
-                        <td>${w.userName || 'User'}</td>
-                        <td><b>${w.method}</b></td>
+                        <td><b style="color:#38bdf8;">${w.userId || 'N/A'}</b></td>
+                        <td><b>${w.userName || 'User'}</b></td>
+                        <td>${w.method}</td>
                         <td>${w.accountNo}</td>
                         <td>৳${w.amountTk}</td>
-                        <td><span class="badge ${statusClass}">${w.status}</span></td>
+                        <td>${statusBadge}</td>
                         <td>
-                            ${w.status !== 'Paid ✅' ? `<button onclick="approveWithdraw('${docSnap.id}')">✅ Approve Payment</button>` : 'Completed'}
+                            ${w.status === 'Pending' ? `
+                                <button class="btn-success" onclick="updateWithdraw('${id}', 'Paid ✅')">✅ Approve</button>
+                                <button class="btn-danger" onclick="updateWithdraw('${id}', 'Rejected ❌')">❌ Reject</button>
+                            ` : 'Completed'}
                         </td>
                     </tr>
                 `;
             });
         }
 
-        window.approveWithdraw = async (id) => {
-            await updateDoc(doc(db, "withdrawals", id), { status: "Paid ✅" });
-            alert("✅ উইথড্র Approved দেওয়া হয়েছে!");
+        window.updateWithdraw = async (id, status) => {
+            await updateDoc(doc(db, "withdrawals", id), { status: status });
+            alert(`✅ স্ট্যাটাস আপডেট হয়েছে: ${status}`);
             loadWithdrawals();
         };
 
+        loadSettings();
         loadUsers();
         loadWithdrawals();
     </script>
 </body>
-  </html>
+</html>
